@@ -1,20 +1,152 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — FinSync</title>
+  <link rel="stylesheet" href="{% static 'css/register.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
 
-{% block title %}
-Register
-{% endblock %}
+<!-- LEFT -->
+<div class="left">
+  <div class="logo"><img src="{% static 'images/logo.png' %}" alt="FinSync"></div>
 
-{% block content %}
+  <div class="panel-mid">
+    <div class="badge"><span class="dot"></span> Personal Finance Platform</div>
+    <h1 class="panel-title">Start managing your<br/><span class="g">money smarter</span></h1>
+    <p class="panel-desc">Join thousands of users tracking expenses, building budgets, and hitting savings goals with FinSync.</p>
 
-<h2>Register</h2>
+    <div class="mini-dash">
+      <div class="md-head">
+        <h4>Dashboard Overview</h4>
+        <span>July 2026</span>
+      </div>
+      <div class="md-kpis">
+        <div class="md-kpi"><div class="kl">Balance</div><div class="kv g">₹84K</div></div>
+        <div class="md-kpi"><div class="kl">Income</div><div class="kv">₹55K</div></div>
+        <div class="md-kpi"><div class="kl">Expenses</div><div class="kv r">₹28K</div></div>
+      </div>
+      <div class="md-bars">
+        <div class="mb" style="height:38%"></div>
+        <div class="mb" style="height:62%"></div>
+        <div class="mb" style="height:44%"></div>
+        <div class="mb hi" style="height:86%"></div>
+        <div class="mb" style="height:54%"></div>
+        <div class="mb hi" style="height:72%"></div>
+        <div class="mb" style="height:50%"></div>
+      </div>
+    </div>
+  </div>
 
-<form method="POST">
+  <div class="panel-foot">
+    <div class="pf"><div class="pf-ico"><i class="fa fa-shield-halved"></i></div>Your data is encrypted and private</div>
+    <div class="pf"><div class="pf-ico"><i class="fa fa-chart-pie"></i></div>Real-time analytics &amp; smart insights</div>
+    <div class="pf"><div class="pf-ico"><i class="fa fa-plane"></i></div>Split trips and bills with friends</div>
+  </div>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<!-- RIGHT -->
+<div class="right">
+  <a href="#" class="back"><i class="fa fa-arrow-left"></i> Back to home</a>
+
+  <div class="form-wrap">
+    <div class="form-head">
+      <h2>Create your account</h2>
+      <p>Already have an account? <a href="{% url 'login' %}">Sign in →</a></p>
+    </div>
+
+    <div class="socials">
+      <a href="#" class="soc-btn"><i class="fab fa-google"></i> Google</a>
+      <a href="#" class="soc-btn"><i class="fab fa-github"></i> GitHub</a>
+    </div>
+
+    <div class="divider"><span>or continue with email</span></div>
+
+    <form method="POST" action="{% url 'register' %}">
     {% csrf_token %}
+      <div class="row-2">
+        <div class="field">
+          <label for="fname">First Name</label>
+          <div class="inp-wrap">
+            <i class="fa fa-user ico"></i>
+            <input type="text" id="fname" name="first_name" placeholder="Tanya" autocomplete="given-name" required/>
+          </div>
+          <div class="field-err" id="fname-err">Required.</div>
+        </div>
+        <div class="field">
+          <label for="lname">Last Name</label>
+          <div class="inp-wrap">
+            <i class="fa fa-user ico"></i>
+            <input type="text" id="lname" name="last_name" placeholder="Sharma" autocomplete="family-name" required/>
+          </div>
+          <div class="field-err" id="lname-err">Required.</div>
+        </div>
+      </div>
 
-    {{ form.as_p }}
+      <div class="field">
+        <label for="username">Username</label>
+        <div class="inp-wrap">
+          <i class="fa fa-at ico"></i>
+          <input type="text" id="username" name="username" placeholder="tanya_sharma" autocomplete="username" required/>
+        </div>
+        <div class="field-err" id="username-err">Username must be at least 4 characters.</div>
+      </div>
 
-    <button type="submit">Register</button>
+      <div class="field">
+        <label for="email">Email address</label>
+        <div class="inp-wrap">
+          <i class="fa fa-envelope ico"></i>
+          <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required/>
+        </div>
+        <div class="field-err" id="email-err">Please enter a valid email address.</div>
+      </div>
 
-</form>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="inp-wrap">
+          <i class="fa fa-lock ico"></i>
+          <input type="password" id="password" name="password1" placeholder="Create a password" oninput="checkStrength()" required/>
+          <i class="fa fa-eye toggle-eye" onclick="togglePwd('password',this)"></i>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+        <div class="strength-label" id="strengthLabel"></div>
+        <div class="field-err" id="pass-err">Password must be at least 6 characters.</div>
+      </div>
 
-{% endblock %}
+      <div class="field">
+        <label for="cpassword">Confirm Password</label>
+        <div class="inp-wrap">
+          <i class="fa fa-lock ico"></i>
+          <input type="password" id="cpassword" name="password2" placeholder="Re-enter your password" required/>
+          <i class="fa fa-eye toggle-eye" onclick="togglePwd('cpassword',this)"></i>
+        </div>
+        <div class="field-err" id="cpass-err">Passwords do not match.</div>
+      </div>
+
+      <div class="form-row">
+        <label class="chk"><input type="checkbox" id="terms"/> I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+      </div>
+
+      <button type="submit" class="btn-sub">Create Account <i class="fa fa-arrow-right"></i></button>
+    </form>
+
+    <p class="foot-note">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+  </div>
+</div>
+
+<script src="{% static 'js/register.js' %}"></script>
+
+</body>
+</html>

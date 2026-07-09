@@ -1,22 +1,113 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — FinSync</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
 
-{% block title %}
-Login
-{% endblock %}
+<!-- LEFT -->
+<div class="left">
+  <div class="logo"><img src="{% static 'images/logo.png' %}" alt="FinSync"></div>
 
-{% block content %}
+  <div class="panel-mid">
+    <div class="badge"><span class="dot"></span> Personal Finance Platform</div>
+    <h1 class="panel-title">Welcome back to<br/><span class="g">FinSync</span></h1>
+    <p class="panel-desc">Your finances are waiting. Log in to check your budgets, review expenses, and stay on top of your money goals.</p>
 
-<h2>Login</h2>
+    <div class="mini-dash">
+      <div class="md-head">
+        <h4>Dashboard Overview</h4>
+        <span>July 2026</span>
+      </div>
+      <div class="md-kpis">
+        <div class="md-kpi"><div class="kl">Balance</div><div class="kv g">₹84K</div></div>
+        <div class="md-kpi"><div class="kl">Income</div><div class="kv">₹55K</div></div>
+        <div class="md-kpi"><div class="kl">Expenses</div><div class="kv r">₹28K</div></div>
+      </div>
+      <div class="md-bars">
+        <div class="mb" style="height:38%"></div>
+        <div class="mb" style="height:62%"></div>
+        <div class="mb" style="height:44%"></div>
+        <div class="mb hi" style="height:86%"></div>
+        <div class="mb" style="height:54%"></div>
+        <div class="mb hi" style="height:72%"></div>
+        <div class="mb" style="height:50%"></div>
+      </div>
+    </div>
+  </div>
 
-<form method="POST">
-    {% csrf_token %}
+  <div class="panel-foot">
+    <div class="pf"><div class="pf-ico"><i class="fa fa-shield-halved"></i></div>Your data is encrypted and private</div>
+    <div class="pf"><div class="pf-ico"><i class="fa fa-chart-pie"></i></div>Real-time analytics &amp; smart insights</div>
+    <div class="pf"><div class="pf-ico"><i class="fa fa-plane"></i></div>Split trips and bills with friends</div>
+  </div>
+</div>
 
-    {{ form.as_p }}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 
-    <button type="submit">
-        Login
-    </button>
+<!-- RIGHT -->
+<div class="right">
+  <a href="#" class="back"><i class="fa fa-arrow-left"></i> Back to home</a>
 
-</form>
+  <div class="form-wrap">
+    <div class="form-head">
+      <h2>Sign in to FinSync</h2>
+      <p>Don't have an account? <a href="{% url 'register' %}">Create one free →</a></p>
+    </div>
 
-{% endblock %}
+    <div class="socials">
+      <a href="#" class="soc-btn"><i class="fab fa-google"></i> Google</a>
+      <a href="#" class="soc-btn"><i class="fab fa-github"></i> GitHub</a>
+    </div>
+
+    <div class="divider"><span>or continue with email</span></div>
+
+    <form method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      <div class="field">
+        <label for="username">Username</label>
+        <div class="inp-wrap">
+          <i class="fa fa-envelope ico"></i>
+          <input type="text" id="username" name="username" placeholder="Enter your username" required>
+        </div>
+        <div class="field-err" id="email-err">Please enter a valid email address.</div>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="inp-wrap">
+          <i class="fa fa-lock ico"></i>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required/>
+          <i class="fa fa-eye toggle-eye" onclick="togglePwd('password',this)"></i>
+        </div>
+        <div class="field-err" id="pass-err">Password must be at least 6 characters.</div>
+      </div>
+
+      <div class="form-row">
+        <label class="chk"><input type="checkbox" id="remember"/> Remember me</label>
+        <a href="#" class="forg">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn-sub">Sign In <i class="fa fa-arrow-right"></i></button>
+    </form>
+
+    <p class="foot-note">New to FinSync? <a href="{% url 'register' %}">Create a free account</a></p>
+  </div>
+</div>
+
+<script src="{% static 'js/login.js' %}"></script>
+
+</body>
+</html>
